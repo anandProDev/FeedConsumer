@@ -70,6 +70,21 @@ public class Outcome implements Feed{
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Outcome outcome = (Outcome) o;
+
+        return outcomeId != null ? outcomeId.equals(outcome.outcomeId) : outcome.outcomeId == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return outcomeId != null ? outcomeId.hashCode() : 0;
+    }
+
     public static final class OutcomeBuilder {
         Header header;
         String marketId;

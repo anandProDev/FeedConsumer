@@ -53,6 +53,38 @@ public class BaseMarket {
         return outcomes;
     }
 
+    @Override
+    public String toString() {
+        return "BaseMarket{" +
+                "header=" + header +
+                ", eventId='" + eventId + '\'' +
+                ", marketId='" + marketId + '\'' +
+                ", name='" + name + '\'' +
+                ", displayed=" + displayed +
+                ", suspended=" + suspended +
+                ", outcomes=" + outcomes +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BaseMarket market = (BaseMarket) o;
+
+        if (eventId != null ? !eventId.equals(market.eventId) : market.eventId != null)
+            return false;
+        return marketId != null ? marketId.equals(market.marketId) : market.marketId == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = eventId != null ? eventId.hashCode() : 0;
+        result = 31 * result + (marketId != null ? marketId.hashCode() : 0);
+        return result;
+    }
 
     public static final class BaseMarketBuilder {
         Header header;

@@ -2,11 +2,9 @@ package com.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.model.Header;
-import com.model.Market;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class BaseEvent {
 
@@ -66,6 +64,20 @@ public class BaseEvent {
         return markets;
     }
 
+    @Override
+    public String toString() {
+        return "BaseEvent{" +
+                "header=" + header +
+                ", eventId='" + eventId + '\'' +
+                ", category='" + category + '\'' +
+                ", subCategory='" + subCategory + '\'' +
+                ", name='" + name + '\'' +
+                ", startTime='" + startTime + '\'' +
+                ", displayed=" + displayed +
+                ", suspended=" + suspended +
+                ", markets=" + markets +
+                '}';
+    }
 
     public static final class BaseEventBuilder {
         Header header;
