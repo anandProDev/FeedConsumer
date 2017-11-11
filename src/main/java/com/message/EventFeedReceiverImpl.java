@@ -12,12 +12,16 @@ import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
 import com.service.EventHandlerFactory;
 import com.service.MarketHandlerFactory;
+import com.service.MarketMapService;
 import com.service.OutcomeHandlerFactory;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,18 +32,23 @@ public class EventFeedReceiverImpl implements EventFeedReceiver{
     private final EventHandlerFactory eventHandlerFactory;
     private final MarketHandlerFactory marketHandlerFactory;
     private final OutcomeHandlerFactory outcomeHandlerFactory;
+    private final MarketMapService marketMapService;
 
     protected ObjectMapper mapper = new ObjectMapper();
     protected Map<String, String> marketEventMap = new HashMap<>();
 
     private static final Logger LOGGER = LogManager.getLogger(EventFeedReceiverImpl.class);
+
+
     @Autowired
     public EventFeedReceiverImpl(EventHandlerFactory eventHandlerFactory,
                                  MarketHandlerFactory marketHandlerFactory,
-                                 OutcomeHandlerFactory outcomeHandlerFactory) {
+                                 OutcomeHandlerFactory outcomeHandlerFactory,
+                                 MarketMapService marketMapService) {
         this.eventHandlerFactory = eventHandlerFactory;
         this.marketHandlerFactory = marketHandlerFactory;
         this.outcomeHandlerFactory = outcomeHandlerFactory;
+        this.marketMapService = marketMapService;
     }
 
     @Override
@@ -76,5 +85,23 @@ public class EventFeedReceiverImpl implements EventFeedReceiver{
             outcomeHandlerFactory.getHandler(operation).
                     ifPresent(handler -> handler.handle(outcome, eventId));
         }
+    }
+
+    @PostConstruct
+    public void initIt() throws Exception {
+        LOGGER.info("Loading up marketEventMap from database");
+        marketMapService.load().ifPresent(map ->marketEventMap = map);
+    }
+
+    @PreDestroy
+    public void cleanUp() throws Exception {
+        LOGGER.info("Storing marketEventMap into database ");
+        marketMapService.save(marketEventMap);
+    }
+
+    @Scheduled(cron = "${app.intermediate.market.map.save.cron}")
+    public void saveMap() {
+        LOGGER.info("Scheduled storing of marketEventMap into database ");
+        marketMapService.save(marketEventMap);
     }
 }

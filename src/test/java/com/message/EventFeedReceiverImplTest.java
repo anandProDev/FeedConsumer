@@ -15,9 +15,13 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
@@ -74,10 +78,16 @@ public class EventFeedReceiverImplTest {
     @Mock
     ObjectMapper objectMapper;
 
+    @Mock
+    MarketMapService marketMapService;
+    private Map<String, String> marketEventMap = new HashMap<>();
+
     @Before
     public void setUp() throws Exception {
-        eventFeedReceiver = new EventFeedReceiverImpl(eventHandlerFactory, marketHandlerFactory, outcomeHandlerFactory);
+        eventFeedReceiver = new EventFeedReceiverImpl(eventHandlerFactory, marketHandlerFactory,
+                outcomeHandlerFactory, marketMapService);
         eventFeedReceiver.mapper = objectMapper;
+        eventFeedReceiver.marketEventMap = marketEventMap;
     }
 
     @Test
@@ -138,5 +148,36 @@ public class EventFeedReceiverImplTest {
         when(objectMapper.readValue(MESSAGE, Event.class)).thenThrow(IOException.class);
         eventFeedReceiver.handleMessages(MESSAGE, EVENT, CREATE);
         verify(createEventHandler, times(0)).handle(event);
+    }
+
+    @Test
+    public void initExecutedSuccessfully() throws Exception {
+
+        Map<String, String> marketEventHolder = new HashMap<>();
+        marketEventHolder.put(MARKET, EVENT);
+
+        Optional<Map<String,String >> optionalMarketMap = Optional.of(marketEventHolder);
+        when(marketMapService.load()).thenReturn(optionalMarketMap);
+
+        eventFeedReceiver.initIt();
+
+        assertThat(eventFeedReceiver.marketEventMap.size(), is(1));
+        assertThat(eventFeedReceiver.marketEventMap.get(MARKET), is(EVENT));
+    }
+
+    @Test
+    public void marketMap_storedOnCleanup() throws Exception {
+
+        eventFeedReceiver.cleanUp();
+
+        verify(marketMapService, times(1)).save(marketEventMap);
+    }
+
+    @Test
+    public void marketMap_storedOnSchedule() throws Exception {
+
+        eventFeedReceiver.saveMap();
+
+        verify(marketMapService, times(1)).save(marketEventMap);
     }
 }

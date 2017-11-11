@@ -10,17 +10,19 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 @RunWith(MockitoJUnitRunner.class)
 @Category(UnitTest.class)
 public class FeedMeConsumerUtilityTest {
 
-    public static final String EVENT_ID = "1";
+    public static final String EVENT_ID = "eventId";
+    public static final String MARKET_ID = "marketId";
     public static final String START_TIME = "start time";
     public static final String NAME = "name";
     public static final String CATEGORY = "category";
@@ -35,6 +37,8 @@ public class FeedMeConsumerUtilityTest {
     public static final String OPERATION = "create";
     public static final String TYPE = "event";
     public static final String TIMESTAMP = "1509874975700";
+
+    Map<String, String> marketEventHolder = new HashMap<>();
 
     @Before
     public void setUp() throws Exception {
@@ -51,6 +55,8 @@ public class FeedMeConsumerUtilityTest {
                 .withSuspended(Boolean.TRUE)
                 .withHeader(header)
                 .build();
+
+        marketEventHolder.put(MARKET_ID, EVENT_ID);
     }
 
     @Test
@@ -59,7 +65,16 @@ public class FeedMeConsumerUtilityTest {
         Optional<JsonDocument> jsonDocument = FeedMeConsumerUtility.transformToJsonDoc(baseEvent);
 
         assertThat(jsonDocument.get().id(), is(EVENT_ID));
-        assertThat(jsonDocument.get().content().toString(), is("{\"displayed\":true,\"eventId\":\"1\",\"subCategory\":\"sub category\",\"markets\":[],\"name\":\"name\",\"header\":{\"msgId\":1,\"type\":\"event\",\"operation\":\"create\",\"timestamp\":\"1509874975700\"},\"startTime\":\"start time\",\"category\":\"category\",\"suspended\":true}"));
+        assertThat(jsonDocument.get().content().toString(), is("{\"displayed\":true,\"eventId\":\"eventId\",\"subCategory\":\"sub category\",\"markets\":[],\"name\":\"name\",\"header\":{\"msgId\":1,\"type\":\"event\",\"operation\":\"create\",\"timestamp\":\"1509874975700\"},\"startTime\":\"start time\",\"category\":\"category\",\"suspended\":true}"));
+    }
+
+    @Test
+    public void transformMapSuccessful(){
+
+        JsonDocument jsonDocument = FeedMeConsumerUtility.transform("key", marketEventHolder).get();
+
+        assertNotNull(jsonDocument);
+        assertThat(jsonDocument.content().toString() , is("{\"marketId\":\"eventId\"}"));
     }
 
     @Test

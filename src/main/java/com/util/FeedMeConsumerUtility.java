@@ -8,6 +8,7 @@ import com.domain.BaseEvent;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import java.util.Map;
 import java.util.Optional;
 
 public class FeedMeConsumerUtility {
@@ -24,6 +25,19 @@ public class FeedMeConsumerUtility {
             return Optional.of(JsonDocument.create(baseEvent.getEventId(), jsonObject));
         } catch (Exception e) {
             LOGGER.error("Unable to transformToJsonDoc baseEvent to JsonDoc "+ baseEvent , e);
+            return Optional.empty();
+        }
+    }
+
+    public static Optional<JsonDocument> transform(String id, Map<String, String> eventMarketMap) {
+
+        JsonObject jsonObject = null;
+        try {
+            String jsonStr = mapper.writeValueAsString(eventMarketMap);
+            jsonObject = JsonObject.fromJson(jsonStr);
+            return Optional.of(JsonDocument.create(id, jsonObject));
+        } catch (Exception e) {
+            LOGGER.error("Unable to transform baseEvent to JsonDoc "+ eventMarketMap , e);
             return Optional.empty();
         }
     }
