@@ -19,6 +19,8 @@ public class BaseMarketTransformerImpl implements BaseMarketTransformer {
     public Optional<BaseMarket> transform(Market market) {
 
         try {
+            LOGGER.debug("Transforming market to base market " + market.getEventId());
+
             return Optional.of(BaseMarket.BaseMarketBuilder.aBaseMarket().withHeader(market.getHeader())
                     .withEventId(market.getEventId())
                     .withMarketId(market.getMarketId())

@@ -2,7 +2,6 @@ package com.transformer;
 
 import com.domain.BaseEvent;
 import com.model.Event;
-import com.service.MarketHandlerFactory;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
@@ -18,8 +17,9 @@ public class BaseEventTransformerImpl implements BaseEventTransformer {
 
     @Override
     public Optional<BaseEvent> transform(Event event) {
-        try {
 
+        try {
+            LOGGER.debug("Transforming event to base event " + event.getEventId());
             return Optional.of(BaseEvent.BaseEventBuilder.aBaseEvent().withHeader(event.getHeader())
                     .withEventId(event.getEventId())
                     .withCategory(event.getCategory())

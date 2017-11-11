@@ -3,8 +3,6 @@ package com.service;
 
 import com.db.EventRetrieverService;
 import com.db.RepositoryService;
-import com.domain.BaseEvent;
-import com.domain.BaseMarket;
 import com.model.Market;
 import com.transformer.BaseMarketTransformer;
 import com.util.FeedMeConsumerUtility;
@@ -12,8 +10,6 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.Optional;
 
 @Component
 public class CreateMarketHandler implements MarketHander {

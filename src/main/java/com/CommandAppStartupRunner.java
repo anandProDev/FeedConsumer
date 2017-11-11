@@ -21,6 +21,8 @@ public class CommandAppStartupRunner implements CommandLineRunner {
 
     @Override
     public void run(String...args){
+
+        LOGGER.debug("Starting to process feeds");
         try{
             feedReceiver.receiveFeeds();
 

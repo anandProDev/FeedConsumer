@@ -1,10 +1,8 @@
 package com.domain;
 
 import com.model.Header;
-import com.model.Market;
 import com.model.Outcome;
 import com.service.UnitTest;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -15,7 +13,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.List;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
 @Category(UnitTest.class)

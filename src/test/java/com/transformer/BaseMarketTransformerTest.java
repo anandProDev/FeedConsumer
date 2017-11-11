@@ -1,6 +1,5 @@
 package com.transformer;
 
-import com.domain.BaseEvent;
 import com.domain.BaseMarket;
 import com.model.Header;
 import com.model.Market;

@@ -1,10 +1,7 @@
 package com.message;
 
 import com.exception.FeedReceiverException;
-import com.message.EventFeedReceiver;
-import com.message.FeedReceiverImpl;
 import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.DefaultConsumer;
 import com.service.UnitTest;
 import org.junit.Before;
@@ -20,9 +17,7 @@ import java.io.IOException;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 @Category(UnitTest.class)

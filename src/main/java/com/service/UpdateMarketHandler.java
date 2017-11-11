@@ -1,9 +1,7 @@
 package com.service;
 
-import com.couchbase.client.java.document.JsonDocument;
 import com.db.EventRetrieverService;
 import com.db.RepositoryService;
-import com.domain.BaseEvent;
 import com.domain.BaseMarket;
 import com.model.Market;
 import com.transformer.BaseMarketTransformer;
@@ -14,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 
 
 @Component
@@ -37,6 +34,8 @@ public class UpdateMarketHandler implements MarketHander {
 
     @Override
     public void handle(Market marketFeed) {
+
+        LOGGER.debug("Handling Market feed with Id: "+ marketFeed.getMarketId());
         baseMarketTransformer.transform(marketFeed).ifPresent(baseMarket -> {
 
             eventRetrieverService.getBaseEvent(baseMarket.getEventId()).ifPresent( baseEvent -> {
