@@ -1,4 +1,4 @@
-package com.service;
+package com.message;
 
 
 public interface FeedReceiver {
