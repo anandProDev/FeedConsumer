@@ -70,7 +70,7 @@ public class CreateMarketHandlerTest {
 
     @Test
     public void handle_successful() {
-        when(baseMarketTransformer.transform(market)).thenReturn(baseMarket);
+        when(baseMarketTransformer.transform(market)).thenReturn(baseMarketOptional);
         when(eventRetrieverService.getBaseEvent(EVENT_ID)).thenReturn(baseEventOptional);
 
         createMarketHandler.handle(market);

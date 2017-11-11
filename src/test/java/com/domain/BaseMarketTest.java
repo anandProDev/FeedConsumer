@@ -62,4 +62,18 @@ public class BaseMarketTest {
     public void toString_ReturnsExpectedValue()  {
         assertThat(baseMarket.toString(), is("BaseMarket{header=header, eventId='1', marketId='2', name='test name', displayed=true, suspended=false, outcomes=outcomes}"));
     }
+
+    @Test
+    public void hashcode() throws Exception {
+
+        assertThat(baseMarket.hashCode(), is(1569));
+
+        baseMarket = BaseMarket.BaseMarketBuilder.aBaseMarket()
+                .withMarketId("myMarketId")
+                .withEventId("myEventId")
+                .build();
+
+        assertThat(baseMarket.hashCode(), is(1446770522));
+
+    }
 }

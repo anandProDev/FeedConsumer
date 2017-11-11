@@ -50,6 +50,8 @@ public class UpdateMarketHandlerTest {
     Outcome outcome;
 
     BaseMarket baseMarket;
+    Optional<BaseMarket> baseMarketOptional;
+
     BaseMarket baseMarket1;
     BaseMarket baseMarket2;
 
@@ -67,6 +69,7 @@ public class UpdateMarketHandlerTest {
                 .withName(TEST)
                 .build();
 
+        baseMarketOptional = Optional.of(baseMarket);
 
         baseMarket1 = BaseMarket.BaseMarketBuilder.aBaseMarket().withEventId(EVENT_ID).withMarketId(MARKET_ID_2)
                 .withOutcomes(outcomes).build();
@@ -84,13 +87,12 @@ public class UpdateMarketHandlerTest {
         baseEventOptional = Optional.of(baseEvent);
 
         updateMarketHandler = new UpdateMarketHandler(baseMarketTransformer, eventRetrieverService,repositoryService);
-
     }
 
     @Test
     public void handleUpdate_successful() throws Exception {
 
-        when(baseMarketTransformer.transform(market)).thenReturn(baseMarket);
+        when(baseMarketTransformer.transform(market)).thenReturn(baseMarketOptional);
         when(eventRetrieverService.getBaseEvent(EVENT_ID)).thenReturn(baseEventOptional);
 
         updateMarketHandler.handle(market);

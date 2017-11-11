@@ -37,17 +37,17 @@ public class UpdateMarketHandler implements MarketHander {
 
     @Override
     public void handle(Market marketFeed) {
-        BaseMarket baseMarket = baseMarketTransformer.transform(marketFeed);
+        baseMarketTransformer.transform(marketFeed).ifPresent(baseMarket -> {
 
-        Optional<BaseEvent> baseEventOptional = eventRetrieverService.getBaseEvent(baseMarket.getEventId());
+            eventRetrieverService.getBaseEvent(baseMarket.getEventId()).ifPresent( baseEvent -> {
+                List<BaseMarket> markets = baseEvent.getMarkets();
+                updateMarket(baseMarket, markets);
+                   FeedMeConsumerUtility.transform(baseEvent)
+                           .ifPresent(document -> repositoryService.updateDocument(document));
+            });
 
-        baseEventOptional.ifPresent( baseEvent -> {
-            List<BaseMarket> markets = baseEvent.getMarkets();
-            updateMarket(baseMarket, markets);
         });
 
-       FeedMeConsumerUtility.transform(baseEventOptional.get())
-               .ifPresent(document -> repositoryService.updateDocument(document));
     }
 
     protected void updateMarket(BaseMarket baseMarket, List<BaseMarket> markets) {

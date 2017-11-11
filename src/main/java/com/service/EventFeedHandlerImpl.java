@@ -1,15 +1,12 @@
 package com.service;
 
-import com.couchbase.client.java.document.JsonDocument;
 import com.db.RepositoryService;
-import com.domain.BaseEvent;
 import com.model.Event;
 import com.transformer.BaseEventTransformer;
-import com.util.FeedMeConsumerUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
+import static com.util.FeedMeConsumerUtility.transform;
 
 @Component
 public class EventFeedHandlerImpl implements EventFeedHandler {
@@ -25,8 +22,10 @@ public class EventFeedHandlerImpl implements EventFeedHandler {
 
     @Override
     public void handle(Event event) {
-        BaseEvent baseEvent = baseEventTransformer.transform(event);
-        FeedMeConsumerUtility.transform(baseEvent)
-                .ifPresent( document -> repositoryService.insertDocument(document));
+        baseEventTransformer.transform(event)
+                .ifPresent( baseEvent -> {
+                        transform(baseEvent)
+                            .ifPresent( document -> repositoryService.insertDocument(document));
+        });
     }
 }

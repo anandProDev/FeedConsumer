@@ -4,7 +4,9 @@ package com.transformer;
 import com.domain.BaseMarket;
 import com.model.Market;
 
+import java.util.Optional;
+
 public interface BaseMarketTransformer {
 
-    BaseMarket transform(Market market);
+    Optional<BaseMarket> transform(Market market);
 }

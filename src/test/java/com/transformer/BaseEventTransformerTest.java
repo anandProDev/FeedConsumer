@@ -11,6 +11,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.Optional;
+
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
@@ -49,9 +51,9 @@ public class BaseEventTransformerTest {
     }
 
     @Test
-    public void transform() throws Exception {
+    public void transform_successful() throws Exception {
 
-        BaseEvent baseEvent = baseEventTransformer.transform(this.event);
+        BaseEvent baseEvent = baseEventTransformer.transform(event).get();
 
         assertThat(header, is(baseEvent.getHeader()));
         assertThat(EVENT_ID, is(baseEvent.getEventId()));
@@ -63,7 +65,12 @@ public class BaseEventTransformerTest {
         assertThat(Boolean.TRUE, is(baseEvent.isSuspended()));
 
         assertTrue(baseEvent.getMarkets().isEmpty());
-
     }
 
+    @Test
+    public void error_transforming_event() throws Exception {
+
+        Optional<BaseEvent> event = baseEventTransformer.transform(null);
+        assertFalse(event.isPresent());
+    }
 }

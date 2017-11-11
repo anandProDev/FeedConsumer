@@ -11,6 +11,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.Optional;
+
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
@@ -36,15 +38,19 @@ public class EventFeedHandlerTest {
 
     BaseEvent baseEvent = BaseEvent.BaseEventBuilder.aBaseEvent().withEventId(EVENT_ID).build();
 
+    Optional<BaseEvent> baseEventOptional;
+
     @Before
     public void setUp(){
+
+        baseEventOptional = Optional.of(baseEvent);
         eventFeedHandler = new EventFeedHandlerImpl(baseEventTransformer, repositoryService);
     }
 
     @Test
     public void handleEvent_successful() throws Exception {
 
-        when(baseEventTransformer.transform(event)).thenReturn(baseEvent);
+        when(baseEventTransformer.transform(event)).thenReturn(baseEventOptional);
 
         eventFeedHandler.handle(event);
 

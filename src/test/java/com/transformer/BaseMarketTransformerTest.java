@@ -1,5 +1,6 @@
 package com.transformer;
 
+import com.domain.BaseEvent;
 import com.domain.BaseMarket;
 import com.model.Header;
 import com.model.Market;
@@ -10,6 +11,8 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import java.util.Optional;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
@@ -46,7 +49,7 @@ public class BaseMarketTransformerTest {
     @Test
     public void Market_is_build_with_expected_values() throws Exception {
 
-        BaseMarket market = baseMarketTransformer.transform(this.market);
+        BaseMarket market = baseMarketTransformer.transform(this.market).get();
 
         assertThat(header, is(market.getHeader()));
         assertThat(EVENT_ID, is(market.getEventId()));
@@ -55,6 +58,13 @@ public class BaseMarketTransformerTest {
         assertThat(Boolean.TRUE, is(market.isDisplayed()));
         assertThat(Boolean.FALSE, is(market.isSuspended()));
         assertTrue(market.getOutcomes().isEmpty());
+    }
+
+    @Test
+    public void error_transforming_BaseEvent() throws Exception {
+
+        Optional<BaseMarket> baseMarket = baseMarketTransformer.transform(null);
+        assertFalse(baseMarket.isPresent());
     }
 
 

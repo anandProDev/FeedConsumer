@@ -34,15 +34,15 @@ public class CreateMarketHandler implements MarketHander {
 
     @Override
     public void handle(Market market) {
-        BaseMarket baseMarket = baseMarketTransformer.transform(market);
+        LOGGER.debug("Handling market event " + market.getMarketId());
 
-        Optional<BaseEvent> baseEventOptional = eventRetrieverService.getBaseEvent(baseMarket.getEventId());
-
-        baseEventOptional.ifPresent( baseEvent -> {
-            baseEvent.getMarkets().add(baseMarket);
-
-            FeedMeConsumerUtility.transform(baseEvent).
-                    ifPresent(document -> repositoryService.insertDocument(document));
+        baseMarketTransformer.transform(market).ifPresent(baseMarket ->  {
+                    eventRetrieverService.getBaseEvent(baseMarket.getEventId())
+                        .ifPresent( baseEvent -> {
+                            baseEvent.getMarkets().add(baseMarket);
+                            FeedMeConsumerUtility.transform(baseEvent).
+                                    ifPresent(document -> repositoryService.insertDocument(document));
+            });
         });
     }
 }
