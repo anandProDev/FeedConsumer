@@ -18,11 +18,11 @@ import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 @Category(UnitTest.class)
-public class EventFeedHandlerTest {
+public class CreateEventHandlerTest {
 
     public static final String EVENT_ID = "eventId";
 
-    EventFeedHandler eventFeedHandler;
+    EventHandler eventHandler;
 
     @Mock
     BaseEventTransformer baseEventTransformer;
@@ -41,7 +41,7 @@ public class EventFeedHandlerTest {
     public void setUp(){
 
         baseEventOptional = Optional.of(baseEvent);
-        eventFeedHandler = new EventFeedHandlerImpl(baseEventTransformer, repositoryService);
+        eventHandler = new CreateEventHandler(baseEventTransformer, repositoryService);
     }
 
     @Test
@@ -49,7 +49,7 @@ public class EventFeedHandlerTest {
 
         when(baseEventTransformer.transform(event)).thenReturn(baseEventOptional);
 
-        eventFeedHandler.handle(event);
+        eventHandler.handle(event);
 
         verify(repositoryService, times(1)).insertDocument(any());
     }

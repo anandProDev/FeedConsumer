@@ -11,14 +11,14 @@ import org.springframework.stereotype.Component;
 import static com.util.FeedMeConsumerUtility.transform;
 
 @Component
-public class EventFeedHandlerImpl implements EventFeedHandler {
+public class UpdateEventHandler implements EventHandler {
 
-    private static final Logger LOGGER = LogManager.getLogger(EventFeedHandlerImpl.class);
+    private static final Logger LOGGER = LogManager.getLogger(UpdateEventHandler.class);
     private final BaseEventTransformer baseEventTransformer;
     private final RepositoryService repositoryService;
 
     @Autowired
-    public EventFeedHandlerImpl(BaseEventTransformer baseEventTransformer, RepositoryService repositoryService) {
+    public UpdateEventHandler(BaseEventTransformer baseEventTransformer, RepositoryService repositoryService) {
         this.baseEventTransformer = baseEventTransformer;
         this.repositoryService = repositoryService;
     }

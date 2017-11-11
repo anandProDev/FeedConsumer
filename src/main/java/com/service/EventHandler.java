@@ -2,7 +2,7 @@ package com.service;
 
 import com.model.Event;
 
-public interface EventFeedHandler {
+public interface EventHandler {
 
     void handle(Event event);
 }
