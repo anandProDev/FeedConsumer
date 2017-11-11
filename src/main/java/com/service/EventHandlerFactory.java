@@ -12,23 +12,24 @@ import java.util.Optional;
 public class EventHandlerFactory {
 
     private static final Logger LOGGER = LogManager.getLogger(EventHandlerFactory.class);
-    private final CreateMarketHandler createMarketHandler;
-    private final UpdateMarketHandler updateMarketHandler;
+    private final CreateEventHandler createEventHandler;
+    private final UpdateEventHandler updateEventHandler;
 
     @Autowired
-    public EventHandlerFactory(CreateMarketHandler createMarketHandler, UpdateMarketHandler updateMarketHandler) {
-        this.createMarketHandler = createMarketHandler;
-        this.updateMarketHandler = updateMarketHandler;
+    public EventHandlerFactory(CreateEventHandler createEventHandler, UpdateEventHandler updateEventHandler) {
+
+        this.createEventHandler = createEventHandler;
+        this.updateEventHandler = updateEventHandler;
     }
 
-    public Optional<MarketHander> getHandler(String operation){
+    public Optional<EventHandler> getHandler(String operation){
 
         if(Operation.CREATE.getName().equalsIgnoreCase(operation))
-            return Optional.of(createMarketHandler);
+            return Optional.of(createEventHandler);
         else if(Operation.UPDATE.getName().equalsIgnoreCase(operation))
-            return Optional.of(updateMarketHandler);
+            return Optional.of(updateEventHandler);
         else {
-            LOGGER.error("Unable to find MarketHander for operation " + operation);
+            LOGGER.error("Unable to find EventHandler for operation " + operation);
             return Optional.empty();
         }
     }

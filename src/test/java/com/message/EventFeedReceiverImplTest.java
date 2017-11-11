@@ -28,27 +28,36 @@ public class EventFeedReceiverImplTest {
 
     public static final String EVENT = "event";
     public static final String CREATE = "create";
+    public static final String UPDATE = "update";
     public static final String MESSAGE = "test";
     private static final String MARKET = "market";
     private static final String OUTCOME = "outcome";
     EventFeedReceiverImpl eventFeedReceiver;
 
     @Mock
-    EventFeedHandler eventFeedHandler;
+    EventHandlerFactory eventHandlerFactory;
     @Mock
     MarketHandlerFactory marketHandlerFactory;
     @Mock
     OutcomeHandlerFactory outcomeHandlerFactory;
 
-
+    Optional<EventHandler> eventHandlerOptional;
     Optional<MarketHander> marketHanderOptional;
-    @Mock
-    CreateMarketHandler createMarketHandler;
-
     Optional<OutcomeHandler> outcomeHandlerOptional;
 
     @Mock
+    CreateEventHandler createEventHandler;
+    @Mock
+    CreateMarketHandler createMarketHandler;
+    @Mock
     CreateOutcomeHandler createOutcomeHandler;
+
+    @Mock
+    UpdateEventHandler updateEventHandler;
+    @Mock
+    UpdateMarketHandler updateMarketHandler;
+    @Mock
+    UpdateOutcomeHandler updateOutcomeHandler;
 
     @Mock
     Event event;
@@ -67,11 +76,7 @@ public class EventFeedReceiverImplTest {
 
     @Before
     public void setUp() throws Exception {
-
-        marketHanderOptional = Optional.of(createMarketHandler);
-        outcomeHandlerOptional = Optional.of(createOutcomeHandler);
-
-        eventFeedReceiver = new EventFeedReceiverImpl(eventFeedHandler, marketHandlerFactory, outcomeHandlerFactory);
+        eventFeedReceiver = new EventFeedReceiverImpl(eventHandlerFactory, marketHandlerFactory, outcomeHandlerFactory);
         eventFeedReceiver.mapper = objectMapper;
     }
 
@@ -81,15 +86,18 @@ public class EventFeedReceiverImplTest {
         DefaultConsumer defaultConsumer = eventFeedReceiver.getDefaultConsumer(channel);
 
         assertNotNull(defaultConsumer);
-
     }
 
     @Test
-    public void handleEventsSuccessfully() throws Exception {
+    public void handleEventsSuccessfully_forCreateHandler() throws Exception {
+        eventHandlerOptional = Optional.of(createEventHandler);
+        marketHanderOptional = Optional.of(createMarketHandler);
+        outcomeHandlerOptional = Optional.of(createOutcomeHandler);
 
         when(objectMapper.readValue(MESSAGE, Event.class)).thenReturn(event);
+        when(eventHandlerFactory.getHandler(CREATE)).thenReturn(eventHandlerOptional);
         eventFeedReceiver.handleMessages(MESSAGE, EVENT, CREATE);
-        verify(eventFeedHandler, times(1)).handle(event);
+        verify(createEventHandler, times(1)).handle(event);
 
         when(objectMapper.readValue(MESSAGE, Market.class)).thenReturn(market);
         when(marketHandlerFactory.getHandler(CREATE)).thenReturn(marketHanderOptional);
@@ -100,15 +108,35 @@ public class EventFeedReceiverImplTest {
         when(outcomeHandlerFactory.getHandler(CREATE)).thenReturn(outcomeHandlerOptional);
         eventFeedReceiver.handleMessages(MESSAGE, OUTCOME, CREATE);
         verify(createOutcomeHandler, times(1)).handle(any(Outcome.class), anyString());
+    }
 
+    @Test
+    public void handleEventsSuccessfully_forUpdateHandler() throws Exception {
+        eventHandlerOptional = Optional.of(updateEventHandler);
+        marketHanderOptional = Optional.of(updateMarketHandler);
+        outcomeHandlerOptional = Optional.of(updateOutcomeHandler);
+
+        when(objectMapper.readValue(MESSAGE, Event.class)).thenReturn(event);
+        when(eventHandlerFactory.getHandler(UPDATE)).thenReturn(eventHandlerOptional);
+        eventFeedReceiver.handleMessages(MESSAGE, EVENT, UPDATE);
+        verify(updateEventHandler, times(1)).handle(event);
+
+        when(objectMapper.readValue(MESSAGE, Market.class)).thenReturn(market);
+        when(marketHandlerFactory.getHandler(UPDATE)).thenReturn(marketHanderOptional);
+        eventFeedReceiver.handleMessages(MESSAGE, MARKET, UPDATE);
+        verify(updateMarketHandler, times(1)).handle(market);
+
+        when(objectMapper.readValue(MESSAGE, Outcome.class)).thenReturn(outcome);
+        when(outcomeHandlerFactory.getHandler(UPDATE)).thenReturn(outcomeHandlerOptional);
+        eventFeedReceiver.handleMessages(MESSAGE, OUTCOME, UPDATE);
+        verify(updateOutcomeHandler, times(1)).handle(any(Outcome.class), anyString());
     }
 
     @Test(expected = IOException.class)
-    public void handleEvents_throwsException() throws Exception {
+    public void handleEvents_throwsException_whenMappingEvent() throws Exception {
 
         when(objectMapper.readValue(MESSAGE, Event.class)).thenThrow(IOException.class);
         eventFeedReceiver.handleMessages(MESSAGE, EVENT, CREATE);
-        verify(eventFeedHandler, times(0)).handle(event);
-
+        verify(createEventHandler, times(0)).handle(event);
     }
 }

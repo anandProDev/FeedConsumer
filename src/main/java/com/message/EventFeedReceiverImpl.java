@@ -10,7 +10,7 @@ import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
-import com.service.EventFeedHandler;
+import com.service.EventHandlerFactory;
 import com.service.MarketHandlerFactory;
 import com.service.OutcomeHandlerFactory;
 import org.apache.log4j.LogManager;
@@ -25,7 +25,7 @@ import java.util.Map;
 @Component
 public class EventFeedReceiverImpl implements EventFeedReceiver{
 
-    private final EventFeedHandler eventFeedHandler;
+    private final EventHandlerFactory eventHandlerFactory;
     private final MarketHandlerFactory marketHandlerFactory;
     private final OutcomeHandlerFactory outcomeHandlerFactory;
 
@@ -34,10 +34,10 @@ public class EventFeedReceiverImpl implements EventFeedReceiver{
 
     private static final Logger LOGGER = LogManager.getLogger(EventFeedReceiverImpl.class);
     @Autowired
-    public EventFeedReceiverImpl(EventFeedHandler eventFeedHandler,
+    public EventFeedReceiverImpl(EventHandlerFactory eventHandlerFactory,
                                  MarketHandlerFactory marketHandlerFactory,
                                  OutcomeHandlerFactory outcomeHandlerFactory) {
-        this.eventFeedHandler = eventFeedHandler;
+        this.eventHandlerFactory = eventHandlerFactory;
         this.marketHandlerFactory = marketHandlerFactory;
         this.outcomeHandlerFactory = outcomeHandlerFactory;
     }
@@ -61,7 +61,8 @@ public class EventFeedReceiverImpl implements EventFeedReceiver{
 
         if(type.equalsIgnoreCase(FeedType.EVENT.getName())){
             Event event = mapper.readValue(message, Event.class);
-            eventFeedHandler.handle(event);
+            eventHandlerFactory.getHandler(operation)
+                    .ifPresent( handler -> handler.handle(event));
         }
         else if(type.equalsIgnoreCase(FeedType.MARKET.getName())){
             Market market = mapper.readValue(message, Market.class);

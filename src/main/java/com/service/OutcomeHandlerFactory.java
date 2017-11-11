@@ -27,7 +27,7 @@ public class OutcomeHandlerFactory {
         else if(Operation.UPDATE.getName().equalsIgnoreCase(operation))
             return Optional.of(updateOutcomeHandler);
         else {
-            LOGGER.error("Unable to find MarketHander for operation " + operation);
+            LOGGER.error("Unable to find OutcomeHandler for operation " + operation);
             return Optional.empty();
         }
 

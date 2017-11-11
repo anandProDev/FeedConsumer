@@ -41,7 +41,7 @@ public class UpdateMarketHandler implements MarketHander {
             eventRetrieverService.getBaseEvent(baseMarket.getEventId()).ifPresent( baseEvent -> {
                 List<BaseMarket> markets = baseEvent.getMarkets();
                 updateMarket(baseMarket, markets);
-                   FeedMeConsumerUtility.transform(baseEvent)
+                   FeedMeConsumerUtility.transformToJsonDoc(baseEvent)
                            .ifPresent(document -> repositoryService.updateDocument(document));
             });
 

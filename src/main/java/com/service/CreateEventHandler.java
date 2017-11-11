@@ -8,10 +8,10 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static com.util.FeedMeConsumerUtility.transform;
+import static com.util.FeedMeConsumerUtility.transformToJsonDoc;
 
 @Component
-public class CreateEventHandler implements EventFeedHandler {
+public class CreateEventHandler implements EventHandler {
 
     private static final Logger LOGGER = LogManager.getLogger(CreateEventHandler.class);
     private final BaseEventTransformer baseEventTransformer;
@@ -28,7 +28,7 @@ public class CreateEventHandler implements EventFeedHandler {
         LOGGER.debug("processing event feed with id: " + event.getEventId());
         baseEventTransformer.transform(event)
                 .ifPresent( baseEvent -> {
-                        transform(baseEvent)
+                        transformToJsonDoc(baseEvent)
                             .ifPresent( document -> repositoryService.insertDocument(document));
         });
     }

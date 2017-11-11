@@ -15,7 +15,7 @@ public class FeedMeConsumerUtility {
     private static final Logger LOGGER = LogManager.getLogger(FeedMeConsumerUtility.class);
     public static ObjectMapper mapper = new ObjectMapper();
 
-    public static Optional<JsonDocument> transform(BaseEvent baseEvent) {
+    public static Optional<JsonDocument> transformToJsonDoc(BaseEvent baseEvent) {
 
         JsonObject jsonObject = null;
         try {
@@ -23,7 +23,7 @@ public class FeedMeConsumerUtility {
             jsonObject = JsonObject.fromJson(jsonStr);
             return Optional.of(JsonDocument.create(baseEvent.getEventId(), jsonObject));
         } catch (Exception e) {
-            LOGGER.error("Unable to transform baseEvent to JsonDoc "+ baseEvent , e);
+            LOGGER.error("Unable to transformToJsonDoc baseEvent to JsonDoc "+ baseEvent , e);
             return Optional.empty();
         }
     }

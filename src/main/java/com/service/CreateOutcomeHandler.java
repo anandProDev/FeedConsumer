@@ -37,7 +37,7 @@ public class CreateOutcomeHandler implements OutcomeHandler {
                 }
             }
 
-            FeedMeConsumerUtility.transform(event).
+            FeedMeConsumerUtility.transformToJsonDoc(event).
                     ifPresent(document -> repositoryService.insertDocument(document));
         });
 

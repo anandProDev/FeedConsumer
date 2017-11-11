@@ -36,7 +36,7 @@ public class CreateMarketHandler implements MarketHander {
                     eventRetrieverService.getBaseEvent(baseMarket.getEventId())
                         .ifPresent( baseEvent -> {
                             baseEvent.getMarkets().add(baseMarket);
-                            FeedMeConsumerUtility.transform(baseEvent).
+                            FeedMeConsumerUtility.transformToJsonDoc(baseEvent).
                                     ifPresent(document -> repositoryService.insertDocument(document));
             });
         });

@@ -56,7 +56,7 @@ public class FeedMeConsumerUtilityTest {
     @Test
     public void transform_successful() throws Exception {
 
-        Optional<JsonDocument> jsonDocument = FeedMeConsumerUtility.transform(baseEvent);
+        Optional<JsonDocument> jsonDocument = FeedMeConsumerUtility.transformToJsonDoc(baseEvent);
 
         assertThat(jsonDocument.get().id(), is(EVENT_ID));
         assertThat(jsonDocument.get().content().toString(), is("{\"displayed\":true,\"eventId\":\"1\",\"subCategory\":\"sub category\",\"markets\":[],\"name\":\"name\",\"header\":{\"msgId\":1,\"type\":\"event\",\"operation\":\"create\",\"timestamp\":\"1509874975700\"},\"startTime\":\"start time\",\"category\":\"category\",\"suspended\":true}"));
@@ -65,7 +65,7 @@ public class FeedMeConsumerUtilityTest {
     @Test
     public void transformationReturnsEmpty_whenExceptionIsThrown() throws Exception {
 
-        Optional<JsonDocument> jsonDocument = FeedMeConsumerUtility.transform(null);
+        Optional<JsonDocument> jsonDocument = FeedMeConsumerUtility.transformToJsonDoc(null);
         assertFalse(jsonDocument.isPresent());
     }
 }

@@ -35,7 +35,7 @@ public class UpdateOutcomeHandler implements OutcomeHandler {
             List<BaseMarket> markets = event.getMarkets();
             findAndUpdateOutcome(outcome, markets);
 
-            FeedMeConsumerUtility.transform(event).ifPresent(
+            FeedMeConsumerUtility.transformToJsonDoc(event).ifPresent(
                     document -> repositoryService.updateDocument(document));
         });
     }
