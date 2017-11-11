@@ -1,4 +1,4 @@
-package com.couchbase;
+package com.db;
 
 import com.couchbase.client.java.Bucket;
 import com.couchbase.client.java.Cluster;
@@ -19,11 +19,10 @@ import java.util.concurrent.TimeUnit;
 
 @Configurable
 @Repository
-public class CouchbaseRepositoryServiceImpl implements CouchbaseRepositoryService {
+public class CouchbaseRepositoryServiceImpl implements RepositoryService {
     private static final Logger LOGGER = LogManager.getLogger(CouchbaseRepositoryServiceImpl.class);
 
-    private final JsonDocument emptyDocument = JsonDocument.create("default");
-    private Bucket bucket;
+    protected Bucket bucket;
     private ReplicateTo replicateTo;
     private final static int COUCHBASE_OPERATION_TIME = 2000;
 
@@ -45,28 +44,45 @@ public class CouchbaseRepositoryServiceImpl implements CouchbaseRepositoryServic
         }
     }
 
+//    private Observable<JsonDocument> retrieveCouchbaseDocument( String documentId) {
+//        long startTime = System.nanoTime();
+//        return bucket
+//                .async()
+//                .get(documentId)
+//                .timeout(COUCHBASE_OPERATION_TIME, TimeUnit.MILLISECONDS)
+//                .firstOrDefault(emptyDocument)
+//                .flatMap(jsonDocument -> {
+//
+//                    if (jsonDocument.equals(emptyDocument)) {
+//                        return Observable.empty();
+//                    }
+//                    return Observable.just(jsonDocument);
+//                });
+//    }
 
-    private Observable<JsonDocument> retrieveCouchbaseDocument( String documentId) {
-        long startTime = System.nanoTime();
-        return bucket
-                .async()
-                .get(documentId)
-                .timeout(COUCHBASE_OPERATION_TIME, TimeUnit.MILLISECONDS)
-                .firstOrDefault(emptyDocument)
-                .flatMap(jsonDocument -> {
-
-                    if (jsonDocument.equals(emptyDocument)) {
-                        return Observable.empty();
-                    }
-                    return Observable.just(jsonDocument);
-                });
+    @Override
+    public void insertDocument(JsonDocument jsonDocument) {
+        bucket.upsert(jsonDocument);
     }
 
     @Override
-    public JsonDocument upsertDocument(JsonDocument jsonDocument) {
-        return bucket.upsert(jsonDocument, replicateTo);
+    public JsonDocument getDocument(String eventId) {
+        return bucket.get(eventId);
+    }
+
+    @Override
+    public void updateDocument(JsonDocument jsonDocument) {
+        bucket.replace(jsonDocument);
     }
 
 
 
+    public CouchbaseRepositoryServiceImpl(Bucket mockBucket,
+                                          String replicas) throws Exception {
+        try {
+            this.bucket = mockBucket;
+            this.replicateTo = ReplicateTo.valueOf(replicas);
+        } catch (Exception e) {
+        }
+    }
 }

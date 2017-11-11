@@ -1,6 +1,7 @@
 package com;
 
-import com.service.FeedReceiver;
+import com.message.FeedReceiver;
+import com.service.UnitTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
