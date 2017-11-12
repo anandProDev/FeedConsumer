@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Configurable
 @Repository
@@ -65,6 +66,7 @@ public class CouchbaseRepositoryServiceImpl implements RepositoryService {
 
     @Override
     public JsonDocument getDocument(String eventId) {
+
         return bucket.get(eventId);
     }
 
