@@ -1,6 +1,6 @@
 FROM openjdk:8-jdk-alpine
 VOLUME /tmp
-ADD target/FeedMe-1.0-SNAPSHOT.jar app.jar
+ADD target/FeedConsumer-1.0-SNAPSHOT.jar feedConsumer.jar
 ENV JAVA_OPTS=""
-ENTRYPOINT exec java -jar /app.jar
+ENTRYPOINT exec java -jar /feedConsumer.jar
 EXPOSE 8080
