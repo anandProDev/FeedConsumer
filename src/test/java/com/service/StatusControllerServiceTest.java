@@ -7,8 +7,10 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import javax.ws.rs.NotFoundException;
+
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -29,10 +31,18 @@ public class StatusControllerServiceTest {
     }
 
     @Test
-    public void status() throws Exception {
+    public void application_isHealthy() throws Exception {
 
         String status = statusControllerService.status();
-        assertThat(status, is(" *** OK from Test *** "));
+        assertThat(status, is("*** OK from Test\n   *** OK from Consumer ***"));
     }
 
+    @Test
+    public void upstreamSystemError() throws Exception {
+
+        when(feedMeClient.getStatus()).thenThrow(NotFoundException.class);
+
+        String status = statusControllerService.status();
+        assertThat(status, is("*** OK from Test\n  Status of feedMeProducer javax.ws.rs.NotFoundException"));
+    }
 }
