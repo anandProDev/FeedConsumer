@@ -6,7 +6,7 @@ import com.model.Market;
 import com.model.Outcome;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.DefaultConsumer;
-import com.service.*;
+import com.factory.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;

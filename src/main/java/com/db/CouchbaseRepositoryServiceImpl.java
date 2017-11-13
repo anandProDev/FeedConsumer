@@ -12,14 +12,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
+import rx.Observable;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Configurable
 @Repository
 public class CouchbaseRepositoryServiceImpl implements RepositoryService {
     private static final Logger LOGGER = LogManager.getLogger(CouchbaseRepositoryServiceImpl.class);
 
+    private final JsonDocument emptyDocument = JsonDocument.create("default");
     protected Bucket bucket;
     private ReplicateTo replicateTo;
     private final static int COUCHBASE_OPERATION_TIME = 2000;
@@ -32,7 +36,7 @@ public class CouchbaseRepositoryServiceImpl implements RepositoryService {
                                           @Value("${couchbase.replicas}") String replicas
     ) throws Exception {
         try {
-            Cluster cluster = CouchbaseCluster.create(DefaultCouchbaseEnvironment.builder().connectTimeout(10000).build(), seedNodes);
+            Cluster cluster = CouchbaseCluster.create(DefaultCouchbaseEnvironment.builder().connectTimeout(15000).build(), seedNodes);
 
             this.bucket = cluster.openBucket(bucketName, bucketPassword);
             this.replicateTo = ReplicateTo.valueOf(replicas);
@@ -42,7 +46,7 @@ public class CouchbaseRepositoryServiceImpl implements RepositoryService {
         }
     }
 
-//    private Observable<JsonDocument> retrieveCouchbaseDocument( String documentId) {
+//    private Observable<JsonDocument> retrieveCouchbaseDocument(String documentId) {
 //        long startTime = System.nanoTime();
 //        return bucket
 //                .async()
@@ -65,18 +69,16 @@ public class CouchbaseRepositoryServiceImpl implements RepositoryService {
 
     @Override
     public JsonDocument getDocument(String eventId) {
-
         return bucket.get(eventId);
     }
 
     @Override
     public void updateDocument(JsonDocument jsonDocument) {
+
         bucket.replace(jsonDocument);
     }
 
-
-
-    public CouchbaseRepositoryServiceImpl(Bucket mockBucket,
+    protected CouchbaseRepositoryServiceImpl(Bucket mockBucket,
                                           String replicas) throws Exception {
         try {
             this.bucket = mockBucket;

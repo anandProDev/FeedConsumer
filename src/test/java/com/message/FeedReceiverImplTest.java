@@ -3,7 +3,7 @@ package com.message;
 import com.exception.FeedReceiverException;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.DefaultConsumer;
-import com.service.UnitTest;
+import com.factory.UnitTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;

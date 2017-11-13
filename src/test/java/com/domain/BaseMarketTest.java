@@ -2,7 +2,7 @@ package com.domain;
 
 import com.model.Header;
 import com.model.Outcome;
-import com.service.UnitTest;
+import com.factory.UnitTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;

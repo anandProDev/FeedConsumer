@@ -1,4 +1,4 @@
-package com.service;
+package com.factory;
 
 import com.couchbase.client.java.document.JsonDocument;
 import com.couchbase.client.java.document.json.JsonObject;

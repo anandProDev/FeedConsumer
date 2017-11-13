@@ -1,4 +1,4 @@
-package com.service;
+package com.factory;
 
 import org.junit.Test;
 import org.junit.experimental.categories.Category;

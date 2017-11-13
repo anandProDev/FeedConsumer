@@ -1,5 +1,8 @@
 package com.service;
 
+import com.factory.FeedMeClient;
+import com.factory.UnitTest;
+import com.service.StatusControllerService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;

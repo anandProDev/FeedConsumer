@@ -2,7 +2,7 @@ package com.db;
 
 import com.couchbase.client.java.Bucket;
 import com.couchbase.client.java.document.JsonDocument;
-import com.service.UnitTest;
+import com.factory.UnitTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -12,6 +12,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 @Category(UnitTest.class)
@@ -28,6 +29,8 @@ public class CouchbaseRepositoryServiceImplTest {
 
 
     private final JsonDocument emptyDocument = JsonDocument.create("default");
+
+
     @Before
     public void setUp() throws Exception {
         couchbaseRepositoryServiceImpl = new CouchbaseRepositoryServiceImpl(bucket, replicas);

@@ -1,4 +1,4 @@
-package com.service;
+package com.factory;
 
 import com.couchbase.client.deps.com.fasterxml.jackson.databind.ObjectMapper;
 import com.couchbase.client.java.document.JsonDocument;

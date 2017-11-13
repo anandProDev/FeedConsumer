@@ -1,6 +1,6 @@
 package com.exception;
 
-import com.service.UnitTest;
+import com.factory.UnitTest;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;

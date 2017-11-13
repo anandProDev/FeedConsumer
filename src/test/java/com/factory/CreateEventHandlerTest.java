@@ -1,4 +1,4 @@
-package com.service;
+package com.factory;
 
 import com.db.RepositoryService;
 import com.domain.BaseEvent;

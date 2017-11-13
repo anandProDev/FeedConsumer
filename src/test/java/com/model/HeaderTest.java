@@ -1,6 +1,6 @@
 package com.model;
 
-import com.service.UnitTest;
+import com.factory.UnitTest;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
